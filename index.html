@@ -10,20 +10,27 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon.svg">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .setting-card,.payday-card{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .setting-card{margin:0 0 28px;padding:17px;background:#fff;border:1px solid #dfe5df;border-radius:18px}
+    .setting-card strong{display:block;font-size:23px;margin-top:4px}
+    .payday-card{position:relative;margin:-16px 0 25px;padding:14px 16px 28px;background:#fff;border:1px solid #dfe5df;border-radius:16px}
+    .payday-card span,.payday-card small{font-size:11px;color:#6b7d78}.payday-card strong{font-size:16px;margin-left:auto}.payday-card small{position:absolute;left:16px;bottom:10px}
+  </style>
   <title>今日の家計</title>
 </head>
 <body>
   <main class="app-shell">
     <header class="topbar">
       <div><p class="eyebrow">MY MONEY, AT A GLANCE</p><h1>今日の家計</h1></div>
-      <button class="month-picker" id="monthPicker" aria-label="表示する月を変更"><span id="monthLabel"></span>⌄</button>
+      <button class="month-picker" id="periodPicker" aria-label="表示する給料期間を変更"><span id="periodLabel"></span>⌄</button>
     </header>
 
     <section id="dashboard" class="screen active">
       <div class="hero-card" id="heroCard">
         <p class="hero-label">今日あと使える金額</p>
         <p class="hero-amount" id="todayAvailable">¥0</p>
-        <p class="hero-message" id="heroMessage">今月の設定を始めましょう</p>
+        <p class="hero-message" id="heroMessage">給料日を設定して始めましょう</p>
         <div class="hero-divider"></div>
         <div class="breakdown">
           <div><span>今日の基本予算</span><strong id="dailyBase">¥0</strong></div>
@@ -34,22 +41,24 @@
 
       <button class="primary add-expense" data-open="expense"><span>＋</span> 支出を追加</button>
       <div class="stat-grid">
-        <article><span>今月残りの自由費</span><strong id="remainingFree">¥0</strong></article>
-        <article><span>今月残り日数</span><strong id="daysLeft">0日</strong></article>
+        <article><span>期間の残り自由費</span><strong id="remainingFree">¥0</strong></article>
+        <article><span>次の給料日まで</span><strong id="daysLeft">あと0日</strong></article>
       </div>
+      <article class="payday-card"><span>次の給料日</span><strong id="nextPayday">―</strong><small id="periodDescription">給料期間：―</small></article>
       <section class="section-block"><div class="section-heading"><h2>最近の支出</h2><button class="text-button" data-tab="records">すべて見る</button></div><div id="recentExpenses" class="record-list empty">まだ支出はありません</div></section>
       <section class="tip"><span>✦</span><p>使わなかった分は自動で翌日以降へ繰越。使いすぎた分はマイナスで反映されます。</p></section>
     </section>
 
     <section id="records" class="screen">
-      <div class="section-heading"><div><p class="eyebrow">MONTHLY RECORDS</p><h2>入出金の記録</h2></div><button class="round-button" data-open="income" aria-label="収入を追加">＋</button></div>
+      <div class="section-heading"><div><p class="eyebrow">PAY PERIOD RECORDS</p><h2>入出金の記録</h2></div><button class="round-button" data-open="income" aria-label="収入を追加">＋</button></div>
       <div class="segmented" role="tablist"><button class="selected" data-record-filter="all">すべて</button><button data-record-filter="expense">支出</button><button data-record-filter="income">収入</button></div>
       <div id="allRecords" class="record-list empty">この月の記録はありません</div>
     </section>
 
     <section id="plans" class="screen">
       <div class="section-heading"><div><p class="eyebrow">PLAN AHEAD</p><h2>予定と貯金</h2></div><button class="round-button" data-open="plan" aria-label="予定支出を追加">＋</button></div>
-      <article class="saving-card"><div><span>今月の貯金目標</span><strong id="savingGoalDisplay">¥0</strong></div><button class="outline" data-open="saving">設定する</button></article>
+      <article class="saving-card"><div><span>今の給料期間の貯金目標</span><strong id="savingGoalDisplay">¥0</strong></div><button class="outline" data-open="saving">設定する</button></article>
+      <article class="setting-card"><div><span>毎月の給料日</span><strong id="salaryDayDisplay">15日</strong></div><button class="outline" data-open="settings">変更</button></article>
       <div class="section-heading minor"><h3>予定支出</h3><button class="text-button" data-open="plan">追加</button></div>
       <div id="planList" class="record-list empty">予定支出はありません</div>
       <div class="section-heading minor"><h3>買い物シミュレーション</h3></div>
@@ -57,7 +66,7 @@
     </section>
 
     <section id="analysis" class="screen">
-      <p class="eyebrow">THIS MONTH AT A GLANCE</p><h2>今月のふり返り</h2>
+      <p class="eyebrow">PAY PERIOD AT A GLANCE</p><h2>この給料期間のふり返り</h2>
       <div class="summary-grid"><article><span>収入</span><strong id="totalIncome">¥0</strong></article><article><span>支出</span><strong id="totalExpense">¥0</strong></article><article><span>予定支出</span><strong id="totalPlans">¥0</strong></article><article><span>貯金目標</span><strong id="goalAmount">¥0</strong></article></div>
       <section class="section-block"><div class="section-heading minor"><h3>カテゴリ別支出</h3></div><div id="categoryChart" class="chart empty">支出を追加すると、ここに内訳が表示されます</div></section>
       <section class="section-block"><div class="section-heading minor"><h3>予算の考え方</h3></div><p class="explanation" id="calculationExplanation"></p></section>
@@ -67,7 +76,7 @@
   <nav class="bottom-nav" aria-label="メインメニュー"><button class="active" data-tab="dashboard"><span>⌂</span>ホーム</button><button data-tab="records"><span>▤</span>記録</button><button data-tab="plans"><span>◷</span>予定</button><button data-tab="analysis"><span>◔</span>分析</button></nav>
 
   <dialog id="entryDialog"><form id="entryForm" method="dialog"><div class="modal-head"><h2 id="modalTitle">支出を追加</h2><button type="button" class="close" data-close>×</button></div><div id="formFields"></div><div class="modal-actions"><button type="button" class="outline" data-close>キャンセル</button><button class="primary" value="default">保存する</button></div></form></dialog>
-  <dialog id="monthDialog"><form method="dialog"><div class="modal-head"><h2>表示する月</h2><button type="button" class="close" data-close>×</button></div><input id="monthInput" type="month"><div class="modal-actions"><button class="primary" id="setMonth">表示する</button></div></form></dialog>
+  <dialog id="monthDialog"><form method="dialog"><div class="modal-head"><h2>表示する給料期間</h2><button type="button" class="close" data-close>×</button></div><label class="field"><span>開始月を選択</span><input id="monthInput" type="month"></label><div class="modal-actions"><button class="primary" id="setMonth">表示する</button></div></form></dialog>
   <script src="app.js"></script>
 </body>
 </html>
