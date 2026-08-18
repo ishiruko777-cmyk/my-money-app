@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#186b5b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="今日の家計">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="style.css">
+  <title>今日の家計</title>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div><p class="eyebrow">MY MONEY, AT A GLANCE</p><h1>今日の家計</h1></div>
+      <button class="month-picker" id="monthPicker" aria-label="表示する月を変更"><span id="monthLabel"></span>⌄</button>
+    </header>
+
+    <section id="dashboard" class="screen active">
+      <div class="hero-card" id="heroCard">
+        <p class="hero-label">今日あと使える金額</p>
+        <p class="hero-amount" id="todayAvailable">¥0</p>
+        <p class="hero-message" id="heroMessage">今月の設定を始めましょう</p>
+        <div class="hero-divider"></div>
+        <div class="breakdown">
+          <div><span>今日の基本予算</span><strong id="dailyBase">¥0</strong></div>
+          <div><span>前日までの繰越</span><strong id="carryover">±¥0</strong></div>
+          <div><span>今日の支出</span><strong id="todaySpent">¥0</strong></div>
+        </div>
+      </div>
+
+      <button class="primary add-expense" data-open="expense"><span>＋</span> 支出を追加</button>
+      <div class="stat-grid">
+        <article><span>今月残りの自由費</span><strong id="remainingFree">¥0</strong></article>
+        <article><span>今月残り日数</span><strong id="daysLeft">0日</strong></article>
+      </div>
+      <section class="section-block"><div class="section-heading"><h2>最近の支出</h2><button class="text-button" data-tab="records">すべて見る</button></div><div id="recentExpenses" class="record-list empty">まだ支出はありません</div></section>
+      <section class="tip"><span>✦</span><p>使わなかった分は自動で翌日以降へ繰越。使いすぎた分はマイナスで反映されます。</p></section>
+    </section>
+
+    <section id="records" class="screen">
+      <div class="section-heading"><div><p class="eyebrow">MONTHLY RECORDS</p><h2>入出金の記録</h2></div><button class="round-button" data-open="income" aria-label="収入を追加">＋</button></div>
+      <div class="segmented" role="tablist"><button class="selected" data-record-filter="all">すべて</button><button data-record-filter="expense">支出</button><button data-record-filter="income">収入</button></div>
+      <div id="allRecords" class="record-list empty">この月の記録はありません</div>
+    </section>
+
+    <section id="plans" class="screen">
+      <div class="section-heading"><div><p class="eyebrow">PLAN AHEAD</p><h2>予定と貯金</h2></div><button class="round-button" data-open="plan" aria-label="予定支出を追加">＋</button></div>
+      <article class="saving-card"><div><span>今月の貯金目標</span><strong id="savingGoalDisplay">¥0</strong></div><button class="outline" data-open="saving">設定する</button></article>
+      <div class="section-heading minor"><h3>予定支出</h3><button class="text-button" data-open="plan">追加</button></div>
+      <div id="planList" class="record-list empty">予定支出はありません</div>
+      <div class="section-heading minor"><h3>買い物シミュレーション</h3></div>
+      <article class="simulation"><label for="simulationAmount">この買い物をして大丈夫？</label><div class="input-row"><input id="simulationAmount" type="number" inputmode="numeric" min="0" placeholder="金額を入力"><span>円</span></div><div id="simulationResult">金額を入れると、今後の1日予算の変化を確認できます。</div></article>
+    </section>
+
+    <section id="analysis" class="screen">
+      <p class="eyebrow">THIS MONTH AT A GLANCE</p><h2>今月のふり返り</h2>
+      <div class="summary-grid"><article><span>収入</span><strong id="totalIncome">¥0</strong></article><article><span>支出</span><strong id="totalExpense">¥0</strong></article><article><span>予定支出</span><strong id="totalPlans">¥0</strong></article><article><span>貯金目標</span><strong id="goalAmount">¥0</strong></article></div>
+      <section class="section-block"><div class="section-heading minor"><h3>カテゴリ別支出</h3></div><div id="categoryChart" class="chart empty">支出を追加すると、ここに内訳が表示されます</div></section>
+      <section class="section-block"><div class="section-heading minor"><h3>予算の考え方</h3></div><p class="explanation" id="calculationExplanation"></p></section>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="メインメニュー"><button class="active" data-tab="dashboard"><span>⌂</span>ホーム</button><button data-tab="records"><span>▤</span>記録</button><button data-tab="plans"><span>◷</span>予定</button><button data-tab="analysis"><span>◔</span>分析</button></nav>
+
+  <dialog id="entryDialog"><form id="entryForm" method="dialog"><div class="modal-head"><h2 id="modalTitle">支出を追加</h2><button type="button" class="close" data-close>×</button></div><div id="formFields"></div><div class="modal-actions"><button type="button" class="outline" data-close>キャンセル</button><button class="primary" value="default">保存する</button></div></form></dialog>
+  <dialog id="monthDialog"><form method="dialog"><div class="modal-head"><h2>表示する月</h2><button type="button" class="close" data-close>×</button></div><input id="monthInput" type="month"><div class="modal-actions"><button class="primary" id="setMonth">表示する</button></div></form></dialog>
+  <script src="app.js"></script>
+</body>
+</html>
